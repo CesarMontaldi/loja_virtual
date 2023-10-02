@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "categoria_produto")
 @SequenceGenerator(name = "seq_categoria_produto", sequenceName = "seq_categoria_produto", allocationSize = 1, initialValue = 1)
-public class categoriaProduto implements Serializable{
+public class CategoriaProduto implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -54,7 +54,7 @@ public class categoriaProduto implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		categoriaProduto other = (categoriaProduto) obj;
+		CategoriaProduto other = (CategoriaProduto) obj;
 		return Objects.equals(id, other.id);
 	}
 	
