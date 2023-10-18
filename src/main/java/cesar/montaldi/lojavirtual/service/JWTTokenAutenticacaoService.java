@@ -1,5 +1,6 @@
 package cesar.montaldi.lojavirtual.service;
 
+import java.io.IOException;
 import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,8 +14,10 @@ import org.springframework.stereotype.Service;
 import cesar.montaldi.lojavirtual.ApplicationContextLoad;
 import cesar.montaldi.lojavirtual.model.Usuario;
 import cesar.montaldi.lojavirtual.repository.UsuarioRepository;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
 
 /*Criar a autenticação e retornar também a autenticação JWT*/
 @Service
@@ -52,36 +55,49 @@ public class JWTTokenAutenticacaoService {
 	}
 	
 	/*Retorna o usuário validado com token ou caso não seja valido retorna null*/
-	public Authentication getAuthentication(HttpServletRequest request, HttpServletResponse response) {
+	public Authentication getAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		
 		String token = request.getHeader(HEADER_STRING);
 		
-		if (token != null) {
-			
-			String tokenLimpo = token.replace(TOKEN_PREFIX, "").trim();
-			
-			/*Faz a validação do token do usuário na requisição e obtem o USER*/
-			String user = Jwts.parser()
-					      .setSigningKey(SECRET)
-					      .parseClaimsJws(tokenLimpo)
-					      .getBody().getSubject();
-			
-			if (user != null) {
+		try {
+		
+			if (token != null) {
 				
-				Usuario usuario = ApplicationContextLoad
-						          .getApplicationContext()
-						          .getBean(UsuarioRepository.class).findUserByLogin(user);
+				String tokenLimpo = token.replace(TOKEN_PREFIX, "").trim();
 				
-				if (usuario != null) {
-					return new UsernamePasswordAuthenticationToken(
-							usuario.getLogin(),
-							usuario.getSenha(),
-							usuario.getAuthorities());
-				}	
+				/*Faz a validação do token do usuário na requisição e obtem o USER*/
+				String user = Jwts.parser()
+						      .setSigningKey(SECRET)
+						      .parseClaimsJws(tokenLimpo)
+						      .getBody().getSubject();
+				
+				if (user != null) {
+					
+					Usuario usuario = ApplicationContextLoad
+							          .getApplicationContext()
+							          .getBean(UsuarioRepository.class).findUserByLogin(user);
+					
+					if (usuario != null) {
+						return new UsernamePasswordAuthenticationToken(
+								usuario.getLogin(),
+								usuario.getSenha(),
+								usuario.getAuthorities());
+					}	
+				}
 			}
+		/*Lança excessão caso a assinatura do token esteja errado*/
+		}catch (SignatureException e) {
+			response.getWriter().write("Token está inválido.");
+		
+		/*Lança excessão caso o token esteja expirado*/
+		}catch (ExpiredJwtException e) {
+			response.getWriter().write("Token está expirado, efetue o login novamente.");
 		}
 		
-		liberacaoCors(response);
+		finally {
+			liberacaoCors(response);
+		}
+
 		return null;
 	} 
 	
