@@ -34,16 +34,16 @@ public class PessoaJuridica  extends Pessoa {
 	public void setCnpj(String cnpj) {
 		this.cnpj = cnpj;
 	}
-	public String getInscricaoEstadual() {
+	public String getinscricaoEstadual() {
 		return inscricaoEstadual;
 	}
-	public void setInscricaoEstadual(String inscricaoEstadual) {
+	public void setinscricaoEstadual(String inscricaoEstadual) {
 		this.inscricaoEstadual = inscricaoEstadual;
 	}
-	public String getInscricaoMunicipal() {
+	public String getinscricaoMunicipal() {
 		return inscricaoMunicipal;
 	}
-	public void setInscricaoMunicipal(String inscricaoMunicipal) {
+	public void setinscricaoMunicipal(String inscricaoMunicipal) {
 		this.inscricaoMunicipal = inscricaoMunicipal;
 	}
 	public String getNomeFantasia() {

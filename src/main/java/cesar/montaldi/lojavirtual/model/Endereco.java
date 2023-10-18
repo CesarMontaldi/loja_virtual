@@ -23,7 +23,7 @@ import cesar.montaldi.lojavirtual.enums.TipoEndereco;
 
 @Entity
 @Table(name = "endereco")
-@SequenceGenerator(name = "seq_endereco", sequenceName = "seq_mendereco", allocationSize = 1, initialValue = 1)
+@SequenceGenerator(name = "seq_endereco", sequenceName = "seq_endereco", allocationSize = 1, initialValue = 1)
 public class Endereco implements Serializable{
 
 	private static final long serialVersionUID = 1L;
