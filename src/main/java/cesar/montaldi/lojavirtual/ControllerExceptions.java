@@ -22,6 +22,16 @@ import cesar.montaldi.lojavirtual.model.dto.ObjectErrorDTO;
 @ControllerAdvice
 public class ControllerExceptions extends ResponseEntityExceptionHandler {
 	
+	@ExceptionHandler(ExceptionLojaVirtual.class)
+	public ResponseEntity<Object> handleExceptionCuston(ExceptionLojaVirtual ex) {
+		ObjectErrorDTO objectErrorDTO = new ObjectErrorDTO();
+		
+		objectErrorDTO.setError(ex.getMessage());
+		objectErrorDTO.setCode(HttpStatus.OK.toString());
+		
+		return new ResponseEntity<Object>(objectErrorDTO, HttpStatus.OK);
+	}
+	
 	/*Captura exceções do projeto*/
 	@ExceptionHandler({Exception.class, RuntimeException.class, Throwable.class})
 	@Override
@@ -45,6 +55,8 @@ public class ControllerExceptions extends ResponseEntityExceptionHandler {
 		
 		objectErrorDTO.setError(msg);
 		objectErrorDTO.setCode(status.value() + " ==> " + status.getReasonPhrase());
+		
+		ex.printStackTrace();
 		
 		return new ResponseEntity<Object>(objectErrorDTO, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -70,6 +82,8 @@ public class ControllerExceptions extends ResponseEntityExceptionHandler {
 		}
 		objectErrorDTO.setError(msg);
 		objectErrorDTO.setCode(HttpStatus.INTERNAL_SERVER_ERROR.toString());
+		
+		ex.printStackTrace();
 		
 		return new ResponseEntity<Object>(objectErrorDTO, HttpStatus.INTERNAL_SERVER_ERROR);
 				
