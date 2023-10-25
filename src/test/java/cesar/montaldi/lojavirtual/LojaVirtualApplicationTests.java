@@ -1,6 +1,7 @@
 package cesar.montaldi.lojavirtual;
 
 import java.util.List;
+import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,8 +48,8 @@ public class LojaVirtualApplicationTests extends TestCase {
 		MockMvc mockMvc = builder.build();
 		
 		Acesso acesso = new Acesso();
-		
-		acesso.setDescricao("ROLE_COMPRADOR");
+		Random random = new Random();
+		acesso.setDescricao("ROLE_COMPRADOR " + random.nextInt(100));
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		
@@ -194,9 +195,12 @@ public class LojaVirtualApplicationTests extends TestCase {
 	@Test
 	public void testCadastroAcesso() throws ExceptionLojaVirtual {
 		
+		Random random = new Random();
+		String descAcesso = "ROLE_ADMIN " + random.nextInt(100);
+		
 		Acesso acesso = new Acesso();
 		
-		acesso.setDescricao("ROLE_ADMIN");
+		acesso.setDescricao(descAcesso);
 		
 		assertEquals(true, acesso.getId() == null);
 		
@@ -206,7 +210,7 @@ public class LojaVirtualApplicationTests extends TestCase {
 		assertEquals(true, acesso.getId() > 0);
 		
 		/*Validar dados salvos da forma correta*/
-		assertEquals("ROLE_ADMIN", acesso.getDescricao());
+		assertEquals(descAcesso, acesso.getDescricao());
 		
 		/*Teste de carregamento*/
 		Acesso acesso2 = acessoRepository.findById(acesso.getId()).get();

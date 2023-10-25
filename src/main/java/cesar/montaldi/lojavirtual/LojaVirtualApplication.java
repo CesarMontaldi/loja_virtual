@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import cesar.montaldi.lojavirtual.service.GeneratePassword;
+
 
 @SpringBootApplication
 @EntityScan(basePackages = "cesar.montaldi.lojavirtual.model")
@@ -15,12 +17,16 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableJpaRepositories(basePackages = {"cesar.montaldi.lojavirtual.repository"})
 @EnableTransactionManagement
 public class LojaVirtualApplication {
-
+	
 	public static void main(String[] args) {
 		
-		//System.out.println(new BCryptPasswordEncoder().encode("123"));
-		
 		SpringApplication.run(LojaVirtualApplication.class, args);
-	}
 
+		/*
+		String senha = GeneratePassword.generateRandomPassword(15);
+		String senhaCript = new BCryptPasswordEncoder().encode(senha);
+		System.out.println("Senha =>: " + senha);
+		System.out.println("SenhaCript =>: " + senhaCript);*/
+	}
+	
 }
