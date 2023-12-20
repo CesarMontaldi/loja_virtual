@@ -22,15 +22,14 @@ public class TestePessoaUsuario extends TestCase {
 	public void testCadastroPessoa() throws ExceptionLojaVirtual {
 		
 		PessoaJuridica pessoaJuridica = new PessoaJuridica();
-		
-		pessoaJuridica.setNome("Cesar Montaldi");
 		pessoaJuridica.setCnpj("" + Math.random());
-		pessoaJuridica.setEmail("cesar.montaldi@yahoo.com");
+		pessoaJuridica.setNome("Cesar Augusto Montaldi");
+		pessoaJuridica.setEmail("guto_montaldi@yahoo.com.br");
 		pessoaJuridica.setTelefone("19998745821");
-		pessoaJuridica.setinscricaoEstadual("3258962581");
-		pessoaJuridica.setinscricaoMunicipal("95135785236");
+		pessoaJuridica.setinscricaoEstadual("325896258");
+		pessoaJuridica.setinscricaoMunicipal("9513578523");
 		pessoaJuridica.setNomeFantasia("Montaldi Informatica");
-		pessoaJuridica.setRazaoSocial("7895214796320");
+		pessoaJuridica.setRazaoSocial("789521479630");
 		
 		Endereco endereco1 = new Endereco();
 		endereco1.setLogradouro("Av. Cabo Pedro Hoffman");
@@ -62,7 +61,7 @@ public class TestePessoaUsuario extends TestCase {
 		assertEquals(true, pessoaJuridica.getId() > 0);
 		
 		for (Endereco endereco : pessoaJuridica.getEnderecos()) {
-			assertEquals(true, pessoaJuridica.getId() > 0);
+			assertEquals(true, endereco.getId() > 0);
 		}
 		
 		assertEquals(2, pessoaJuridica.getEnderecos().size());

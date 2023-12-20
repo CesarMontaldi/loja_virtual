@@ -13,13 +13,16 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ServiceSendEmail {
 
+	@Value("${username.app}")
 	private String userName = "montaldi35@gmail.com";
+	@Value("${password.app}")
 	private String password = "xjys gpge oezj mcio";
 	
 	@Async

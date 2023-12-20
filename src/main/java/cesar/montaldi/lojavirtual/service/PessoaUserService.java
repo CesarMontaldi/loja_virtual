@@ -61,13 +61,14 @@ public class PessoaUserService {
 			usuarioPj = usuarioRepository.save(usuarioPj);
 			
 			usuarioRepository.insertAcessoUserPj(usuarioPj.getId());
+			//usuarioRepository.insertAcessoUserPj(usuarioPj.getId(), "ROLE_ADMIN");
 			
 			StringBuilder messagemHtml = new StringBuilder();
 			
-			messagemHtml.append("<b>Olá </b>" +"<b>" + juridica.getNome().split(" ")[0] + ",</b> <br/><br/>");
-			messagemHtml.append("<b>Segue abaixo seus dados de acesso para a loja virtual.</b>" + "<br/><br/>");
-			messagemHtml.append("<b>Login: </b>" + juridica.getEmail() + "<br/><br/>");
-			messagemHtml.append("<b>Senha: </b>").append(senha).append("<br/><br/>");
+			messagemHtml.append("<b>Olá </b>" +"<b>" + juridica.getNome().split(" ")[0] + ",</b> <br/>");
+			messagemHtml.append("<b>Segue abaixo seus dados de acesso para a loja virtual.</b>" + "<br/>");
+			messagemHtml.append("<b>Login: </b>" + juridica.getEmail() + "<br/>");
+			messagemHtml.append("<b>Senha: </b>").append(senha).append("<br/>");
 			messagemHtml.append("Obrigado!");
 			
 			/*Fazer o envio de e-mail do login e senha*/

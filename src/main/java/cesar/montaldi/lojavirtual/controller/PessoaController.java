@@ -24,7 +24,7 @@ public class PessoaController {
 
 	
 	@ResponseBody
-	@PostMapping("/salvarPj")
+	@PostMapping(value = "/salvarPj")
 	public ResponseEntity<PessoaJuridica> salvarPj(@RequestBody PessoaJuridica pessoaJuridica) throws ExceptionLojaVirtual {
 		
 		if (pessoaJuridica == null) {
@@ -33,6 +33,10 @@ public class PessoaController {
 		
 		if (pessoaJuridica.getId() == null && pessoaRepository.existeCnpjCadastrado(pessoaJuridica.getCnpj()) != null) {
 			throw new ExceptionLojaVirtual("Já existe CNPJ cadastrado com o número: " + pessoaJuridica.getCnpj());
+		}
+		
+		if (pessoaJuridica.getId() == null && pessoaRepository.existeInscricaoEstadualCadastrada(pessoaJuridica.getinscricaoEstadual()) != null) {
+			throw new ExceptionLojaVirtual("Já existe Inscrição Estadual cadastrada com o número: " + pessoaJuridica.getinscricaoEstadual());
 		}
 		
 		pessoaJuridica = pessoaUserService.salvarPessoaJuridica(pessoaJuridica);
