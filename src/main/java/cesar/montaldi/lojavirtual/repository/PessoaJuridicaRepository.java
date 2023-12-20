@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import cesar.montaldi.lojavirtual.model.PessoaJuridica;
 
 @Repository
-public interface PessoaRepository extends CrudRepository<PessoaJuridica, Long> {
+public interface PessoaJuridicaRepository extends CrudRepository<PessoaJuridica, Long> {
 	
 	/*Faz busca no banco para validar se o CNPJ já esta cadastrado*/
 	@Query(value = "select pj from PessoaJuridica pj where pj.cnpj = ?1")

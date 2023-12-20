@@ -1,4 +1,4 @@
-package cesar.montaldi.lojavirtual.service;
+package cesar.montaldi.lojavirtual.util;
 
 import java.security.SecureRandom;
 import java.util.stream.Collectors;
