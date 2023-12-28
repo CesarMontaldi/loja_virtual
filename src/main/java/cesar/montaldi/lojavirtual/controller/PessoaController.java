@@ -1,5 +1,7 @@
 package cesar.montaldi.lojavirtual.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +40,44 @@ public class PessoaController {
 	
 	@Autowired
 	private EnderecoRepository enderecoRepository;
-
+	
+	@ResponseBody
+	@GetMapping(value = "/consultaNomePF/{nome}")
+	public ResponseEntity<List<PessoaFisica>> consultaNomePF(@PathVariable("nome") String nome) {
+		
+		List<PessoaFisica> fisicas = pessoaFisicaRepository.consultaPorNomePF(nome.trim().toUpperCase());
+		
+		return new ResponseEntity<List<PessoaFisica>>(fisicas, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/consultaPorCpf/{cpf}")
+	public ResponseEntity<List<PessoaFisica>> consultaPorCpf(@PathVariable("cpf") String cpf) {
+		
+		List<PessoaFisica> fisicas = pessoaFisicaRepository.consultaPorCpf(cpf);
+		
+		return new ResponseEntity<List<PessoaFisica>>(fisicas, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/consultaNomePJ/{nome}")
+	public ResponseEntity<List<PessoaJuridica>> consultaNomePJ(@PathVariable("nome") String nome) {
+		
+		List<PessoaJuridica> juridicas = pessoaJuridicaRepository.consultaPorNomePJ(nome.trim().toUpperCase());
+		
+		return new ResponseEntity<List<PessoaJuridica>>(juridicas, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/consultaPorCnpj/{cnpj}")
+	public ResponseEntity<List<PessoaJuridica>> consultaPorCnpj(@PathVariable("cnpj") String cnpj) {
+		
+		List<PessoaJuridica> juridicas = pessoaJuridicaRepository.consultaPorCnpj(cnpj);
+		
+		return new ResponseEntity<List<PessoaJuridica>>(juridicas, HttpStatus.OK);
+	}
+	
+	
 	@ResponseBody
 	@GetMapping(value = "/consultaCep/{cep}")
 	public ResponseEntity<CepDTO> consultaCep(@PathVariable("cep") String cep) {
