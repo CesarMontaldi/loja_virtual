@@ -47,35 +47,35 @@ public class MarcaProdutoController {
 	
 	@ResponseBody 
 	@PostMapping(value = "/deleteMarca")
-	public ResponseEntity<?> deleteMarca(@RequestBody MarcaProduto marcaProduto) {
+	public ResponseEntity<String> deleteMarca(@RequestBody MarcaProduto marcaProduto) {
 		
 
 		if (!marcaProdutoRepository.findById(marcaProduto.getId()).isPresent()) {
-			return new ResponseEntity("Marca Produto já foi removida.", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>("Marca Produto já foi removida.", HttpStatus.NOT_FOUND);
 		}
 		
 		marcaProdutoRepository.deleteById(marcaProduto.getId());
 		
-		return new ResponseEntity("Marca Produto Removida", HttpStatus.OK);
+		return new ResponseEntity<String>("Marca Produto Removida", HttpStatus.OK);
 	}
 	
 	@ResponseBody 
 	@DeleteMapping(value = "/deleteMarcaId/{id}")
-	public ResponseEntity<?> deleteMarcaId(@PathVariable("id") Long id) {
+	public ResponseEntity<String> deleteMarcaId(@PathVariable("id") Long id) {
 		
 		if (!marcaProdutoRepository.findById(id).isPresent()) {
-			return new ResponseEntity("Marca Produto já foi removida.", HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>("Marca Produto já foi removida.", HttpStatus.NOT_FOUND);
 		}
 		
 		marcaProdutoRepository.deleteById(id);
 		
-		return new ResponseEntity("Marca Produto Removida", HttpStatus.OK);
+		return new ResponseEntity<String>("Marca Produto Removida", HttpStatus.OK);
 	}
-	
+	 
 	
 	@ResponseBody 
 	@GetMapping(value = "/buscarMarca/{id}")
-	public ResponseEntity<?> buscarMarca(@PathVariable("id") Long id) throws ExceptionLojaVirtual {
+	public ResponseEntity<MarcaProduto> buscarMarca(@PathVariable("id") Long id) throws ExceptionLojaVirtual {
 		
 		MarcaProduto marcaProduto = marcaProdutoRepository.findById(id).orElse(null);
 
