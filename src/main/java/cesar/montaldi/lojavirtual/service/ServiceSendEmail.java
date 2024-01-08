@@ -20,10 +20,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class ServiceSendEmail {
 
-	@Value("${username.app}")
-	private String userName;
-	@Value("${password.app}")
-	private String password;
+//	@Value("${username.app}")
+//	private String userName;
+//	@Value("${password.app}")
+//	private String password;
+	
+	private String userName = "montaldi35@gmail.com";
+	private String password = "xjys gpge oezj mcio";
 	
 	
 	@Async

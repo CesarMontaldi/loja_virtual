@@ -153,28 +153,23 @@ public class ProdutoController {
 		return new ResponseEntity<Produto>(produtoSalvo, HttpStatus.OK);
 	}
 	
-	@ResponseBody /*Poder dar um retorno da API*/
-	@PostMapping(value = "/deleteProduto")/*Mapeando a url para receber JSON*/
-	public ResponseEntity<?> deleteProduto(@RequestBody Produto produto) {/*Recebe o JSON e converte para Objeto*/
+	@ResponseBody
+	@GetMapping(value = "/buscaProdutoNome/{nome}")
+	public ResponseEntity<List<Produto>> buscaProdutoNome(@PathVariable("nome") String nome) throws ExceptionLojaVirtual {
 		
-		produtoRepository.deleteById(produto.getId());
-		return new ResponseEntity("Produto Removido", HttpStatus.OK);
+		List<Produto> produtos = produtoRepository.buscarProdutoPorNome(nome.toUpperCase());
+
+		if (produtos == null) {
+			throw new ExceptionLojaVirtual("Não foi possível encontrar o Produto.");
+		}
+		
+		return new ResponseEntity<List<Produto>>(produtos, HttpStatus.OK);
 	}
 	
-	@ResponseBody /*Poder dar um retorno da API*/
-	@DeleteMapping(value = "/deleteProdutoId/{id}")/*Mapeando a url para receber JSON*/
-	public ResponseEntity<?> deleteProdutoId(@PathVariable("id") Long id) {/*Recebe o JSON e converte para Objeto*/
-		
-		produtoRepository.deleteById(id);
-		
-		return new ResponseEntity("Produto Removido", HttpStatus.OK);
-	}
-	
-	
-	
-	@ResponseBody /*Poder dar um retorno da API*/
-	@GetMapping(value = "/buscaProdutoId/{id}")/*Mapeando a url para receber JSON*/
-	public ResponseEntity<?> buscaProdutoId(@PathVariable("id") Long id) throws ExceptionLojaVirtual {/*Recebe o JSON e converte para Objeto*/
+
+	@ResponseBody
+	@GetMapping(value = "/buscaProdutoId/{id}")
+	public ResponseEntity<?> buscaProdutoId(@PathVariable("id") Long id) throws ExceptionLojaVirtual {
 		
 		Produto produto = produtoRepository.findById(id).orElse(null);
 
@@ -185,15 +180,23 @@ public class ProdutoController {
 		return new ResponseEntity<Produto>(produto, HttpStatus.OK);
 	}
 	
-	
-	
-	@ResponseBody /*Poder dar um retorno da API*/
-	@GetMapping(value = "/buscaProdutoNome/{nome}")/*Mapeando a url para receber JSON*/
-	public ResponseEntity<List<Produto>> buscaProdutoPorNome(@PathVariable("nome") String nome) {/*Recebe o JSON e converte para Objeto*/
+
+	@ResponseBody 
+	@PostMapping(value = "/deleteProduto")
+	public ResponseEntity<?> deleteProduto(@RequestBody Produto produto) {
 		
-		List<Produto> produtos = produtoRepository.buscarProdutoPorNome(nome.toUpperCase()); 
-		
-		return new ResponseEntity<List<Produto>>(produtos, HttpStatus.OK);
+		produtoRepository.deleteById(produto.getId());
+		return new ResponseEntity<String>("Produto Removido", HttpStatus.OK);
 	}
 	
+	
+	@ResponseBody 
+	@DeleteMapping(value = "/deleteProdutoId/{id}")
+	public ResponseEntity<?> deleteProdutoId(@PathVariable("id") Long id) {
+		
+		produtoRepository.deleteById(id);
+		
+		return new ResponseEntity<String>("Produto Removido", HttpStatus.OK);
+	}
+		
 }

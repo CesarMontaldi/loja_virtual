@@ -14,7 +14,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long>{
 	@Query(nativeQuery = true, value = "SELECT count (1) > 0 from produto where upper(nome) = upper(trim(?1))")
 	public boolean existeProduto(String produto);
 
-	@Query("select p from Produto p where upper(trim(p.nome)) like %?1%")
+	@Query("select p from Produto p where upper(p.nome) like %?1%")
 	List<Produto> buscarProdutoPorNome(String nome);
 	
 	@Query("select p from Produto p where upper(trim(p.nome)) like %?1% and p.empresa.id = ?2")

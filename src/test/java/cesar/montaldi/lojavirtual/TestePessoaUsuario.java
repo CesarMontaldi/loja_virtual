@@ -77,10 +77,10 @@ public class TestePessoaUsuario extends TestCase {
 	@Test
 	public void testCadastroPessoaFisica() throws ExceptionLojaVirtual {
 		
-		PessoaJuridica pessoaJuridica = pessoaJuridicaRepository.existeCnpjCadastrado("0.6290275524108812");
+		PessoaJuridica pessoaJuridica = pessoaJuridicaRepository.existeCnpjCadastrado("0.6827873676559818");
 		
 		PessoaFisica pessoaFisica = new PessoaFisica();
-		pessoaFisica.setCpf("066.772.240-82");
+		pessoaFisica.setCpf("281.980.120-01");
 		pessoaFisica.setNome("Cesar Montaldi");
 		pessoaFisica.setEmail("guto_montaldi@yahoo.com.br");
 		pessoaFisica.setTelefone("19998745821");
