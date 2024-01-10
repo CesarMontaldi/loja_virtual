@@ -280,8 +280,13 @@ public class ProdutoController {
 	@ResponseBody 
 	@PostMapping(value = "/deleteProduto")
 	public ResponseEntity<?> deleteProduto(@RequestBody Produto produto) {
+
+		if (!produtoRepository.findById(produto.getId()).isPresent()) {
+			return new ResponseEntity<String>("Produto já foi removido.", HttpStatus.NOT_FOUND);
+		}
 		
 		produtoRepository.deleteById(produto.getId());
+		
 		return new ResponseEntity<String>("Produto Removido", HttpStatus.OK);
 	}
 	
@@ -290,8 +295,12 @@ public class ProdutoController {
 	@DeleteMapping(value = "/deleteProdutoId/{id}")
 	public ResponseEntity<?> deleteProdutoId(@PathVariable("id") Long id) {
 		
-		produtoRepository.deleteById(id);
+		if (!produtoRepository.findById(id).isPresent()) {
+			return new ResponseEntity<String>("Produto já foi removido.", HttpStatus.NOT_FOUND);
+		}
 		
+	    produtoRepository.deleteById(id);
+	
 		return new ResponseEntity<String>("Produto Removido", HttpStatus.OK);
 	}
 		

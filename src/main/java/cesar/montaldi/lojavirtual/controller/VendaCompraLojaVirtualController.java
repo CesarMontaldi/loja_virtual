@@ -1,10 +1,14 @@
 package cesar.montaldi.lojavirtual.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,16 +18,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cesar.montaldi.lojavirtual.ExceptionLojaVirtual;
 import cesar.montaldi.lojavirtual.model.Endereco;
+import cesar.montaldi.lojavirtual.model.ImagemProduto;
 import cesar.montaldi.lojavirtual.model.ItemVendaLoja;
 import cesar.montaldi.lojavirtual.model.PessoaFisica;
+import cesar.montaldi.lojavirtual.model.StatusRastreio;
 import cesar.montaldi.lojavirtual.model.VendaCompraLojaVirtual;
 import cesar.montaldi.lojavirtual.model.dto.ImagemProdutoDTO;
 import cesar.montaldi.lojavirtual.model.dto.ItemVendaDTO;
 import cesar.montaldi.lojavirtual.model.dto.ProdutoDTO;
 import cesar.montaldi.lojavirtual.model.dto.VendaCompraLojaVirtualDTO;
 import cesar.montaldi.lojavirtual.repository.EnderecoRepository;
+import cesar.montaldi.lojavirtual.repository.ImagemProdutoRepository;
 import cesar.montaldi.lojavirtual.repository.NotaFiscalVendaRepository;
+import cesar.montaldi.lojavirtual.repository.StatusRastreioRepository;
 import cesar.montaldi.lojavirtual.repository.VendaCompraLojaVirtualRepository;
+import cesar.montaldi.lojavirtual.service.VendaService;
 
 @RestController
 public class VendaCompraLojaVirtualController {
@@ -34,16 +43,24 @@ public class VendaCompraLojaVirtualController {
 	@Autowired
 	private EnderecoRepository enderecoRepository;
 
-	
 	@Autowired
 	private PessoaController pessoaController;
 	
 	@Autowired
-	NotaFiscalVendaRepository notaFiscalVendaRepository;
+	private NotaFiscalVendaRepository notaFiscalVendaRepository;
+	
+	@Autowired
+	private ImagemProdutoRepository imagemProdutoRepository;
+	
+	@Autowired
+	private StatusRastreioRepository statusRastreioRepository;
+	
+	@Autowired
+	private VendaService vendaService;
 	
 	
 	@ResponseBody
-	@PostMapping(value = "/salvarVendaLojatt")
+	@PostMapping(value = "/salvarVendaLoja")
 	public ResponseEntity<VendaCompraLojaVirtualDTO> salvarVendaLoja(@RequestBody @Valid VendaCompraLojaVirtual vendaCompraLojaVirtual) throws ExceptionLojaVirtual {
 		
 		
@@ -71,6 +88,16 @@ public class VendaCompraLojaVirtualController {
 		/*Salva primeiro a venda e todos os dados*/
 		vendaCompraLojaVirtual = vendaCompraLojaVirtualRepository.saveAndFlush(vendaCompraLojaVirtual);
 		
+		StatusRastreio statusRastreio = new StatusRastreio();
+		statusRastreio.setCentroDistribuicao("Loja local");
+		statusRastreio.setCidade("Sumaré");
+		statusRastreio.setEmpresa(vendaCompraLojaVirtual.getEmpresa());
+		statusRastreio.setEstado("São Paulo");
+		statusRastreio.setStatus("Inicio Compra");
+		statusRastreio.setVendaCompraLojaVirtual(vendaCompraLojaVirtual);
+		
+		statusRastreioRepository.save(statusRastreio);
+		
 		/*Associa a venda gravada no banco com a nota fiscal*/
 		vendaCompraLojaVirtual.getNotaFiscalVenda().setVendaCompraLojaVirtual(vendaCompraLojaVirtual);
 		
@@ -84,10 +111,10 @@ public class VendaCompraLojaVirtualController {
 		
 		compraLojaVirtualDTO.setEntrega(vendaCompraLojaVirtual.getEnderecoEntrega());
 		compraLojaVirtualDTO.setCobranca(vendaCompraLojaVirtual.getEnderecoCobranca());
+		compraLojaVirtualDTO.setId(vendaCompraLojaVirtual.getId());
 		
 		compraLojaVirtualDTO.setValorDesconto(vendaCompraLojaVirtual.getValorDesconto());
-		compraLojaVirtualDTO.setValorFrete(vendaCompraLojaVirtual.getValorFrete());
-		
+		compraLojaVirtualDTO.setValorFrete(vendaCompraLojaVirtual.getValorFrete());				
 		compraLojaVirtualDTO.setFormaPagamento(vendaCompraLojaVirtual.getFormaPagamento());
 		
 		for (ItemVendaLoja item: vendaCompraLojaVirtual.getItemVendaLojas()) {
@@ -97,9 +124,9 @@ public class VendaCompraLojaVirtualController {
 			ProdutoDTO produtoDTO = new ProdutoDTO();
 			itemVendaDTO.setProduto(produtoDTO);
 			produtoDTO.setId(item.getProduto().getId());
+			produtoDTO.setNome(item.getProduto().getNome());
 			produtoDTO.setDescricao(item.getProduto().getDescricao());
-			//produtoDTO.setCategoriaProduto(item.getProduto().getCategoriaProduto());
-			//itemVendaDTO.setProduto(item.getProduto());
+
 			
 			compraLojaVirtualDTO.getItemVendaLoja().add(itemVendaDTO);
 		}
@@ -109,7 +136,7 @@ public class VendaCompraLojaVirtualController {
 	}
 
 	@ResponseBody
-	@GetMapping(value = "/consultaVendaIdtt/{idVenda}")
+	@GetMapping(value = "/consultaVendaId/{idVenda}")
 	public ResponseEntity<VendaCompraLojaVirtualDTO> consultaVendaId(@PathVariable("idVenda") Long idVenda) {
 		
 		VendaCompraLojaVirtual compraLojaVirtual = vendaCompraLojaVirtualRepository.findById(idVenda).orElse(new VendaCompraLojaVirtual());
@@ -129,25 +156,65 @@ public class VendaCompraLojaVirtualController {
 		
 		compraLojaVirtualDTO.setFormaPagamento(compraLojaVirtual.getFormaPagamento());
 		
+		Long id = null;
+		
 		for (ItemVendaLoja item: compraLojaVirtual.getItemVendaLojas()) {
-					
-					ItemVendaDTO itemVendaDTO = new ItemVendaDTO();
-					itemVendaDTO.setQuantidade(item.getQuantidade());
-					ProdutoDTO produtoDTO = new ProdutoDTO();
-					itemVendaDTO.setId(item.getId());
-					itemVendaDTO.setProduto(produtoDTO);
-					produtoDTO.setId(item.getProduto().getId());
-					produtoDTO.setDescricao(item.getProduto().getDescricao());
-					//produtoDTO.setCategoriaProduto(item.getProduto().getCategoriaProduto());
-					produtoDTO.setValorVenda(item.getProduto().getValorVenda());
-					//produtoDTO.setMarcaProduto(item.getProduto().getMarcaProduto());
-					produtoDTO.setQuantidadeEstoque(item.getProduto().getQuantidadeAlertaEstoque());
-					//itemVendaDTO.setProduto(item.getProduto());
-					
-					compraLojaVirtualDTO.getItemVendaLoja().add(itemVendaDTO);
-				}
+
+			id = item.getProduto().getId();
+				
+			List<ImagemProdutoDTO> dtosimages = new ArrayList<ImagemProdutoDTO>();
+			List<ImagemProduto> imagemProdutos = imagemProdutoRepository.buscaImagemProduto(id);
+			
+			for (ImagemProduto imagemProduto : imagemProdutos) {
+				
+				ImagemProdutoDTO imagemProdutoDTO = new ImagemProdutoDTO();
+				imagemProdutoDTO.setId(imagemProduto.getId());
+				imagemProdutoDTO.setEmpresa(imagemProduto.getEmpresa().getId());
+				imagemProdutoDTO.setProduto(imagemProduto.getProduto().getId());
+				imagemProdutoDTO.setImagemOriginal(imagemProduto.getImagemOriginal());
+				imagemProdutoDTO.setImagemMiniatura(imagemProduto.getImagemMiniatura());
+				
+				dtosimages.add(imagemProdutoDTO);
+			
+			}
+		
+				ItemVendaDTO itemVendaDTO = new ItemVendaDTO();
+				itemVendaDTO.setQuantidade(item.getQuantidade());
+				ProdutoDTO produtoDTO = new ProdutoDTO();
+				itemVendaDTO.setId(item.getId());
+				itemVendaDTO.setProduto(produtoDTO);
+				produtoDTO.setId(item.getProduto().getId());
+				produtoDTO.setDescricao(item.getProduto().getDescricao());
+				produtoDTO.setPeso(item.getProduto().getPeso());
+				produtoDTO.setLargura(item.getProduto().getLargura());
+				produtoDTO.setAltura(item.getProduto().getAltura());
+				produtoDTO.setProfundidade(item.getProduto().getProfundidade());
+				produtoDTO.setValorVenda(item.getProduto().getValorVenda());
+				produtoDTO.setQuantidadeEstoque(item.getProduto().getQuantidadeEstoque());
+				produtoDTO.setEmpresa(item.getProduto().getEmpresa());
+				produtoDTO.setCategoriaProduto(item.getProduto().getCategoriaProduto());
+				produtoDTO.setMarcaProduto(item.getProduto().getMarcaProduto());
+				produtoDTO.setImagens(dtosimages);
+				
+				compraLojaVirtualDTO.getItemVendaLoja().add(itemVendaDTO);
+				
+		}
 		
 		return new ResponseEntity<VendaCompraLojaVirtualDTO>(compraLojaVirtualDTO, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@DeleteMapping(value = "/deletaVendaTotalBanco/{idVenda}")
+	public ResponseEntity<String> deletaVendaTotalBanco(@PathVariable(value = "idVenda") Long idVenda) {
+		
+		
+		if (!vendaCompraLojaVirtualRepository.findById(idVenda).isPresent()) {
+			return new ResponseEntity<String>("Venda já foi removida.", HttpStatus.NOT_FOUND);
+		}
+		
+		vendaService.exclusaoTotalVendaBanco(idVenda);
+		
+		return new ResponseEntity<String>("Venda excluida com sucesso!", HttpStatus.OK);
 	}
 	
 }
