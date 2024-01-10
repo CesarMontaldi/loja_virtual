@@ -2,19 +2,23 @@ package cesar.montaldi.lojavirtual.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -23,7 +27,6 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -59,7 +62,7 @@ public class VendaCompraLojaVirtual implements Serializable{
 	
 	private BigDecimal valorDesconto;
 	
-	//@NotNull(message = "A forma de pagamento deve ser informado")
+	
 	@ManyToOne
 	@JoinColumn(name = "forma_pagamento_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "forma_pagamento_fk"))
 	private FormaPagamento formaPagamento;
@@ -93,6 +96,9 @@ public class VendaCompraLojaVirtual implements Serializable{
 	@ManyToOne(targetEntity = PessoaJuridica.class)
 	@JoinColumn(name = "empresa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_fk"))
 	private PessoaJuridica empresa;
+	
+	@OneToMany(mappedBy = "vendaCompraLojaVirtual", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private List<ItemVendaLoja> itemVendaLojas = new ArrayList<ItemVendaLoja>();
 
 	public Long getId() {
 		return id;
@@ -210,6 +216,16 @@ public class VendaCompraLojaVirtual implements Serializable{
 	public int hashCode() {
 		return Objects.hash(id);
 	}
+	
+	public List<ItemVendaLoja> getItemVendaLojas() {
+		return itemVendaLojas;
+	}
+
+	public void setItemVendaLojas(List<ItemVendaLoja> itemVendaLojas) {
+		this.itemVendaLojas = itemVendaLojas;
+	}
+	
+
 
 	@Override
 	public boolean equals(Object obj) {

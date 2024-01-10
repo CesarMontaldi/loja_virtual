@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import cesar.montaldi.lojavirtual.model.Produto;
+import cesar.montaldi.lojavirtual.model.dto.ProdutoDTO;
 
 @Repository
 public interface ProdutoRepository extends JpaRepository<Produto, Long>{

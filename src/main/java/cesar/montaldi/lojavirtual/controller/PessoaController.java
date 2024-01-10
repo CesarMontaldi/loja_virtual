@@ -177,6 +177,35 @@ public class PessoaController {
 		if (!ValidaCPF.isCPF(pessoaFisica.getCpf())) {
 			throw new ExceptionLojaVirtual("Cpf: " + pessoaFisica.getCpf() + " está inválido.");
 		}
+
+		if (pessoaFisica.getId() == null || pessoaFisica.getId() <= 0) {
+			for (int p = 0; p < pessoaFisica.getEnderecos().size(); p++) {
+				
+				CepDTO cepDTO = pessoaUserService.consultaCep(pessoaFisica.getEnderecos().get(p).getCep());
+				
+				pessoaFisica.getEnderecos().get(p).setBairro(cepDTO.getBairro());
+				pessoaFisica.getEnderecos().get(p).setCidade(cepDTO.getLocalidade());
+				pessoaFisica.getEnderecos().get(p).setComplemento(cepDTO.getComplemento());
+				pessoaFisica.getEnderecos().get(p).setLogradouro(cepDTO.getLogradouro());
+				pessoaFisica.getEnderecos().get(p).setUf(cepDTO.getUf());
+			}
+		}else {
+			for (int p = 0; p < pessoaFisica.getEnderecos().size(); p++) {
+				
+				Endereco enderecoTemp = enderecoRepository.findById(pessoaFisica.getEnderecos().get(p).getId()).get();
+				
+				if (!enderecoTemp.getCep().equals(pessoaFisica.getEnderecos().get(p).getCep())) {
+					
+					CepDTO cepDTO = pessoaUserService.consultaCep(pessoaFisica.getEnderecos().get(p).getCep());
+					
+					pessoaFisica.getEnderecos().get(p).setBairro(cepDTO.getBairro());
+					pessoaFisica.getEnderecos().get(p).setCidade(cepDTO.getLocalidade());
+					pessoaFisica.getEnderecos().get(p).setComplemento(cepDTO.getComplemento());
+					pessoaFisica.getEnderecos().get(p).setLogradouro(cepDTO.getLogradouro());
+					pessoaFisica.getEnderecos().get(p).setUf(cepDTO.getUf());
+				}
+			}
+		}
 		
 		pessoaFisica = pessoaUserService.salvarPessoaFisica(pessoaFisica);
 		

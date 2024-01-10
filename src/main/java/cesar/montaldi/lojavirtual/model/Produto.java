@@ -23,6 +23,10 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import cesar.montaldi.lojavirtual.model.dto.ImagemProdutoDTO;
+
 @Entity
 @Table(name = "produto")
 @SequenceGenerator(name = "seq_produto", sequenceName = "seq_produto", allocationSize = 1, initialValue = 1)
@@ -101,11 +105,11 @@ public class Produto implements Serializable{
 	@JoinColumn(name = "marca_produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "marca_produto_id_fk"))
 	private MarcaProduto marcaProduto;
 	
-	
+
 	@OneToMany(mappedBy = "produto", orphanRemoval = true, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<ImagemProduto> imagens = new ArrayList<ImagemProduto>();
 	
-	
+
 	public Long getId() {
 		return id;
 	}

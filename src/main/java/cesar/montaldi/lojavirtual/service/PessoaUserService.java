@@ -93,11 +93,13 @@ public class PessoaUserService {
 	}
 
 	public PessoaFisica salvarPessoaFisica(PessoaFisica pessoaFisica) {
+
 		
 		for (int i = 0; i < pessoaFisica.getEnderecos().size(); i++) {
 			pessoaFisica.getEnderecos().get(i).setPessoa(pessoaFisica);
 			//pessoaFisica.getEnderecos().get(i).setEmpresa(pessoaFisica);
 		}
+		
 		
 		pessoaFisica = pessoaFisicaRepository.save(pessoaFisica);
 		

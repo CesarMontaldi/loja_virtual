@@ -69,6 +69,7 @@ public class Endereco implements Serializable{
 	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
 	private Pessoa empresa;
 
+	
 	public Long getId() {
 		return id;
 	}
