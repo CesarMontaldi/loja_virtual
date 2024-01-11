@@ -1,6 +1,9 @@
 package cesar.montaldi.lojavirtual.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -209,6 +212,7 @@ public class VendaCompraLojaVirtualController {
 		return new ResponseEntity<VendaCompraLojaVirtualDTO>(compraLojaVirtualDTO, HttpStatus.OK);
 	}
 	
+	
 	@ResponseBody
 	@GetMapping(value = "/consultaVendaDinamica/{valor}/{tipoconsulta}")
 	public ResponseEntity<List<VendaCompraLojaVirtualDTO>> consultaVendaDinamica(@PathVariable("valor") String valor, @PathVariable("tipoconsulta") String tipoconsulta) {
@@ -239,6 +243,99 @@ public class VendaCompraLojaVirtualController {
 		
 		for (VendaCompraLojaVirtual vendaCompraLojaVirtual : compraLojaVirtual) {
 				
+			VendaCompraLojaVirtualDTO compraLojaVirtualDTO =  new VendaCompraLojaVirtualDTO();
+			
+			compraLojaVirtualDTO.setId(vendaCompraLojaVirtual.getId());
+			
+			compraLojaVirtualDTO.setValorTotal(vendaCompraLojaVirtual.getValorTotal());
+			compraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtual.getPessoa());
+			
+			compraLojaVirtualDTO.setEntrega(vendaCompraLojaVirtual.getEnderecoEntrega());
+			compraLojaVirtualDTO.setCobranca(vendaCompraLojaVirtual.getEnderecoCobranca());
+			
+			compraLojaVirtualDTO.setValorDesconto(vendaCompraLojaVirtual.getValorDesconto());
+			compraLojaVirtualDTO.setValorFrete(vendaCompraLojaVirtual.getValorFrete());
+			
+			compraLojaVirtualDTO.setFormaPagamento(vendaCompraLojaVirtual.getFormaPagamento());
+			
+			Long id = null;
+			
+			for (ItemVendaLoja item: vendaCompraLojaVirtual.getItemVendaLojas()) {
+	
+				id = item.getProduto().getId();
+					
+				List<ImagemProdutoDTO> dtosimages = new ArrayList<ImagemProdutoDTO>();
+				List<ImagemProduto> imagemProdutos = imagemProdutoRepository.buscaImagemProduto(id);
+				
+				for (ImagemProduto imagemProduto : imagemProdutos) {
+					
+					ImagemProdutoDTO imagemProdutoDTO = new ImagemProdutoDTO();
+					imagemProdutoDTO.setId(imagemProduto.getId());
+					imagemProdutoDTO.setEmpresa(imagemProduto.getEmpresa().getId());
+					imagemProdutoDTO.setProduto(imagemProduto.getProduto().getId());
+					//imagemProdutoDTO.setImagemOriginal(imagemProduto.getImagemOriginal());
+					//imagemProdutoDTO.setImagemMiniatura(imagemProduto.getImagemMiniatura());
+					
+					dtosimages.add(imagemProdutoDTO);
+				
+				}
+			
+					ItemVendaDTO itemVendaDTO = new ItemVendaDTO();
+					itemVendaDTO.setQuantidade(item.getQuantidade());
+					ProdutoDTO produtoDTO = new ProdutoDTO();
+					itemVendaDTO.setId(item.getId());
+					itemVendaDTO.setProduto(produtoDTO);
+					produtoDTO.setId(item.getProduto().getId());
+					produtoDTO.setNome(item.getProduto().getNome());
+					produtoDTO.setDescricao(item.getProduto().getDescricao());
+					produtoDTO.setPeso(item.getProduto().getPeso());
+					produtoDTO.setLargura(item.getProduto().getLargura());
+					produtoDTO.setAltura(item.getProduto().getAltura());
+					produtoDTO.setProfundidade(item.getProduto().getProfundidade());
+					produtoDTO.setValorVenda(item.getProduto().getValorVenda());
+					produtoDTO.setQuantidadeEstoque(item.getProduto().getQuantidadeEstoque());
+					produtoDTO.setEmpresa(item.getProduto().getEmpresa());
+					produtoDTO.setCategoriaProduto(item.getProduto().getCategoriaProduto());
+					produtoDTO.setMarcaProduto(item.getProduto().getMarcaProduto());
+					produtoDTO.setImagens(dtosimages);
+					
+					compraLojaVirtualDTO.getItemVendaLoja().add(itemVendaDTO);
+			}
+			
+			dtosVendas.add(compraLojaVirtualDTO);
+		}
+		
+		return new ResponseEntity<List<VendaCompraLojaVirtualDTO>>(dtosVendas, HttpStatus.OK);
+	}
+	
+	
+	
+	@ResponseBody
+	@GetMapping(value = "/consultaVendaDinamicaFaixaData/{data1}/{data2}")
+	public ResponseEntity<List<VendaCompraLojaVirtualDTO>>consultaVendaDinamicaFaixaData(@PathVariable("data1") String data1, @PathVariable("data2") String data2) throws ParseException {
+		
+		List<VendaCompraLojaVirtual> compraLojaVirtual = null;
+		
+		//SimpleDateFormat dateFormatOrig = new SimpleDateFormat("dd-MM-yyyy");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		
+		//Date date1 = dateFormatOrig.parse(data1);
+		//Date date2 = dateFormatOrig.parse(data2);
+		
+		Date date1 = dateFormat.parse(data1);
+		Date date2 = dateFormat.parse(data2);
+	
+		
+		compraLojaVirtual = vendaCompraLojaVirtualRepository.consultaVendaFaixaData(date1, date2);
+		
+		if (compraLojaVirtual == null) {
+			compraLojaVirtual = new ArrayList<VendaCompraLojaVirtual>();
+		}
+		
+		List<VendaCompraLojaVirtualDTO> dtosVendas = new ArrayList<VendaCompraLojaVirtualDTO>();
+		
+		for (VendaCompraLojaVirtual vendaCompraLojaVirtual : compraLojaVirtual) {
+			
 			VendaCompraLojaVirtualDTO compraLojaVirtualDTO =  new VendaCompraLojaVirtualDTO();
 			
 			compraLojaVirtualDTO.setId(vendaCompraLojaVirtual.getId());

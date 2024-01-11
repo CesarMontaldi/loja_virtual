@@ -1,5 +1,6 @@
 package cesar.montaldi.lojavirtual.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -36,6 +37,13 @@ public interface VendaCompraLojaVirtualRepository extends JpaRepository<VendaCom
 			+ " i.vendaCompraLojaVirtual.excluido = false and upper(trim(i.vendaCompraLojaVirtual.enderecoEntrega.logradouro)) like %?1%")
 	List<VendaCompraLojaVirtual> vendaPorEnderecoEntrega(String enderecoEntrega);
 
+	@Query(value ="select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i "
+			+ " where i.vendaCompraLojaVirtual.excluido = false "
+			+ " and i.vendaCompraLojaVirtual.dataVenda >= ?1 "
+			+ " and i.vendaCompraLojaVirtual.dataVenda <= ?2 ")
+	List<VendaCompraLojaVirtual> consultaVendaFaixaData(Date data1, Date data2);
+		
+		
 	
 	//SELECT venda_compra_loja_virtual_id FROM item_venda_loja WHERE produto_id = 22
 	
