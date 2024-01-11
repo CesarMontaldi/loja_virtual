@@ -18,7 +18,23 @@ public interface VendaCompraLojaVirtualRepository extends JpaRepository<VendaCom
 	VendaCompraLojaVirtual findByIdExclusao(Long id);
 	
 	@Query(value = "select i.vendaCompraLojaVirtual from ItemVendaLoja i where i.vendaCompraLojaVirtual.excluido = false and i.produto.id = ?1")
-	List<VendaCompraLojaVirtual> vendaPorProduto(Long IdProduto);
+	List<VendaCompraLojaVirtual> vendaPorProduto(Long idProduto);
+
+	@Query(value = "select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i where "
+			+ " i.vendaCompraLojaVirtual.excluido = false and upper(trim(i.produto.nome)) like %?1%")
+	List<VendaCompraLojaVirtual> vendaPorNomeProduto(String nomeProduto);
+
+	@Query(value = "select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i where "
+			+ " i.vendaCompraLojaVirtual.excluido = false and upper(trim(i.vendaCompraLojaVirtual.pessoa.nome)) like %?1%")
+	List<VendaCompraLojaVirtual> vendaPorNomeCliente(String nomeCliente);
+	
+	@Query(value = "select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i where "
+			+ " i.vendaCompraLojaVirtual.excluido = false and upper(trim(i.vendaCompraLojaVirtual.enderecoCobranca.logradouro)) like %?1%")
+	List<VendaCompraLojaVirtual> vendaPorEnderecoCobranca(String enderecoCobranca);
+	
+	@Query(value = "select distinct(i.vendaCompraLojaVirtual) from ItemVendaLoja i where "
+			+ " i.vendaCompraLojaVirtual.excluido = false and upper(trim(i.vendaCompraLojaVirtual.enderecoEntrega.logradouro)) like %?1%")
+	List<VendaCompraLojaVirtual> vendaPorEnderecoEntrega(String enderecoEntrega);
 
 	
 	//SELECT venda_compra_loja_virtual_id FROM item_venda_loja WHERE produto_id = 22

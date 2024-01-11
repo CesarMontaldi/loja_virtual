@@ -209,6 +209,100 @@ public class VendaCompraLojaVirtualController {
 		return new ResponseEntity<VendaCompraLojaVirtualDTO>(compraLojaVirtualDTO, HttpStatus.OK);
 	}
 	
+	@ResponseBody
+	@GetMapping(value = "/consultaVendaDinamica/{valor}/{tipoconsulta}")
+	public ResponseEntity<List<VendaCompraLojaVirtualDTO>> consultaVendaDinamica(@PathVariable("valor") String valor, @PathVariable("tipoconsulta") String tipoconsulta) {
+		
+		List<VendaCompraLojaVirtual> compraLojaVirtual = null;
+		
+		if (tipoconsulta.equalsIgnoreCase("POR_ID_PROD")) {
+			compraLojaVirtual = vendaCompraLojaVirtualRepository.vendaPorProduto(Long.parseLong(valor));
+		
+		} else if (tipoconsulta.equalsIgnoreCase("POR_NOME_PROD")) {
+			compraLojaVirtual = vendaCompraLojaVirtualRepository.vendaPorNomeProduto(valor.toUpperCase().trim());
+		
+		} else if (tipoconsulta.equalsIgnoreCase("POR_NOME_CLIENTE")) {
+			compraLojaVirtual = vendaCompraLojaVirtualRepository.vendaPorNomeCliente(valor.toUpperCase().trim());
+		
+		} else if (tipoconsulta.equalsIgnoreCase("POR_ENDERECO_COBRANCA")) {
+			compraLojaVirtual = vendaCompraLojaVirtualRepository.vendaPorEnderecoCobranca(valor.toUpperCase().trim());
+		
+		} else if (tipoconsulta.equalsIgnoreCase("POR_ENDERECO_ENTREGA")) {
+			compraLojaVirtual = vendaCompraLojaVirtualRepository.vendaPorEnderecoEntrega(valor.toUpperCase().trim());
+		}
+		
+		if (compraLojaVirtual == null) {
+			compraLojaVirtual = new ArrayList<VendaCompraLojaVirtual>();
+		}
+		
+		List<VendaCompraLojaVirtualDTO> dtosVendas = new ArrayList<VendaCompraLojaVirtualDTO>();
+		
+		for (VendaCompraLojaVirtual vendaCompraLojaVirtual : compraLojaVirtual) {
+				
+			VendaCompraLojaVirtualDTO compraLojaVirtualDTO =  new VendaCompraLojaVirtualDTO();
+			
+			compraLojaVirtualDTO.setId(vendaCompraLojaVirtual.getId());
+			
+			compraLojaVirtualDTO.setValorTotal(vendaCompraLojaVirtual.getValorTotal());
+			compraLojaVirtualDTO.setPessoa(vendaCompraLojaVirtual.getPessoa());
+			
+			compraLojaVirtualDTO.setEntrega(vendaCompraLojaVirtual.getEnderecoEntrega());
+			compraLojaVirtualDTO.setCobranca(vendaCompraLojaVirtual.getEnderecoCobranca());
+			
+			compraLojaVirtualDTO.setValorDesconto(vendaCompraLojaVirtual.getValorDesconto());
+			compraLojaVirtualDTO.setValorFrete(vendaCompraLojaVirtual.getValorFrete());
+			
+			compraLojaVirtualDTO.setFormaPagamento(vendaCompraLojaVirtual.getFormaPagamento());
+			
+			Long id = null;
+			
+			for (ItemVendaLoja item: vendaCompraLojaVirtual.getItemVendaLojas()) {
+	
+				id = item.getProduto().getId();
+					
+				List<ImagemProdutoDTO> dtosimages = new ArrayList<ImagemProdutoDTO>();
+				List<ImagemProduto> imagemProdutos = imagemProdutoRepository.buscaImagemProduto(id);
+				
+				for (ImagemProduto imagemProduto : imagemProdutos) {
+					
+					ImagemProdutoDTO imagemProdutoDTO = new ImagemProdutoDTO();
+					imagemProdutoDTO.setId(imagemProduto.getId());
+					imagemProdutoDTO.setEmpresa(imagemProduto.getEmpresa().getId());
+					imagemProdutoDTO.setProduto(imagemProduto.getProduto().getId());
+					//imagemProdutoDTO.setImagemOriginal(imagemProduto.getImagemOriginal());
+					//imagemProdutoDTO.setImagemMiniatura(imagemProduto.getImagemMiniatura());
+					
+					dtosimages.add(imagemProdutoDTO);
+				
+				}
+			
+					ItemVendaDTO itemVendaDTO = new ItemVendaDTO();
+					itemVendaDTO.setQuantidade(item.getQuantidade());
+					ProdutoDTO produtoDTO = new ProdutoDTO();
+					itemVendaDTO.setId(item.getId());
+					itemVendaDTO.setProduto(produtoDTO);
+					produtoDTO.setId(item.getProduto().getId());
+					produtoDTO.setNome(item.getProduto().getNome());
+					produtoDTO.setDescricao(item.getProduto().getDescricao());
+					produtoDTO.setPeso(item.getProduto().getPeso());
+					produtoDTO.setLargura(item.getProduto().getLargura());
+					produtoDTO.setAltura(item.getProduto().getAltura());
+					produtoDTO.setProfundidade(item.getProduto().getProfundidade());
+					produtoDTO.setValorVenda(item.getProduto().getValorVenda());
+					produtoDTO.setQuantidadeEstoque(item.getProduto().getQuantidadeEstoque());
+					produtoDTO.setEmpresa(item.getProduto().getEmpresa());
+					produtoDTO.setCategoriaProduto(item.getProduto().getCategoriaProduto());
+					produtoDTO.setMarcaProduto(item.getProduto().getMarcaProduto());
+					produtoDTO.setImagens(dtosimages);
+					
+					compraLojaVirtualDTO.getItemVendaLoja().add(itemVendaDTO);
+			}
+			
+			dtosVendas.add(compraLojaVirtualDTO);
+		}
+		
+		return new ResponseEntity<List<VendaCompraLojaVirtualDTO>>(dtosVendas, HttpStatus.OK);
+	}
 	
 	
 	@ResponseBody
