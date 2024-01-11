@@ -1,9 +1,7 @@
 package cesar.montaldi.lojavirtual.controller;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -227,6 +225,9 @@ public class VendaCompraLojaVirtualController {
 		
 		} else if (tipoconsulta.equalsIgnoreCase("POR_NOME_CLIENTE")) {
 			compraLojaVirtual = vendaCompraLojaVirtualRepository.vendaPorNomeCliente(valor.toUpperCase().trim());
+			
+		} else if (tipoconsulta.equalsIgnoreCase("POR_CPF_CLIENTE")) {
+			compraLojaVirtual = vendaCompraLojaVirtualRepository.vendaPorCpfCliente(valor.toUpperCase().trim());
 		
 		} else if (tipoconsulta.equalsIgnoreCase("POR_ENDERECO_COBRANCA")) {
 			compraLojaVirtual = vendaCompraLojaVirtualRepository.vendaPorEnderecoCobranca(valor.toUpperCase().trim());
@@ -312,21 +313,12 @@ public class VendaCompraLojaVirtualController {
 	
 	@ResponseBody
 	@GetMapping(value = "/consultaVendaDinamicaFaixaData/{data1}/{data2}")
-	public ResponseEntity<List<VendaCompraLojaVirtualDTO>>consultaVendaDinamicaFaixaData(@PathVariable("data1") String data1, @PathVariable("data2") String data2) throws ParseException {
+	public ResponseEntity<List<VendaCompraLojaVirtualDTO>>consultaVendaDinamicaFaixaData(
+				@PathVariable("data1") String data1, @PathVariable("data2") String data2) throws ParseException {
 		
 		List<VendaCompraLojaVirtual> compraLojaVirtual = null;
 		
-		//SimpleDateFormat dateFormatOrig = new SimpleDateFormat("dd-MM-yyyy");
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		
-		//Date date1 = dateFormatOrig.parse(data1);
-		//Date date2 = dateFormatOrig.parse(data2);
-		
-		Date date1 = dateFormat.parse(data1);
-		Date date2 = dateFormat.parse(data2);
-	
-		
-		compraLojaVirtual = vendaCompraLojaVirtualRepository.consultaVendaFaixaData(date1, date2);
+		compraLojaVirtual = vendaService.consultaVendaFaixaData(data1, data2);
 		
 		if (compraLojaVirtual == null) {
 			compraLojaVirtual = new ArrayList<VendaCompraLojaVirtual>();

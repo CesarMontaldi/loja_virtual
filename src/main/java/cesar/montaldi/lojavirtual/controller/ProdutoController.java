@@ -174,14 +174,14 @@ public class ProdutoController {
 		}
 		
 		
-		List<ProdutoDTO> dtos = new ArrayList<ProdutoDTO>();
+		List<ProdutoDTO> produtoDto = new ArrayList<ProdutoDTO>();
 		Long id = null;
 		
 		
 			for (int i = 0; i < produtos.size(); i++) {
 				id = produtos.get(i).getId();
 				
-				List<ImagemProdutoDTO> dtosimages = new ArrayList<ImagemProdutoDTO>();
+				List<ImagemProdutoDTO> imagenDto = new ArrayList<ImagemProdutoDTO>();
 				List<ImagemProduto> imagemProdutos = imagemProdutoRepository.buscaImagemProduto(id);
 				
 					for (ImagemProduto imagemProduto : imagemProdutos) {
@@ -194,7 +194,7 @@ public class ProdutoController {
 						imagemProdutoDTO.setImagemOriginal(imagemProduto.getImagemOriginal());
 						imagemProdutoDTO.setImagemMiniatura(imagemProduto.getImagemMiniatura());
 						
-						dtosimages.add(imagemProdutoDTO);
+						imagenDto.add(imagemProdutoDTO);
 					
 				}
 			
@@ -215,14 +215,14 @@ public class ProdutoController {
 						produtoDTO.setEmpresa(produtos.get(i).getEmpresa());
 						produtoDTO.setCategoriaProduto(produtos.get(i).getCategoriaProduto());
 						produtoDTO.setMarcaProduto(produtos.get(i).getMarcaProduto());
-						produtoDTO.setImagens(dtosimages);
+						produtoDTO.setImagens(imagenDto);
 					
 					
-						dtos.add(produtoDTO);
+						produtoDto.add(produtoDTO);
 			}
 				
 
-		return new ResponseEntity<List<ProdutoDTO>>(dtos, HttpStatus.OK);
+		return new ResponseEntity<List<ProdutoDTO>>(produtoDto, HttpStatus.OK);
 	}
 	
 
