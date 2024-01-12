@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import cesar.montaldi.lojavirtual.model.VendaCompraLojaVirtual;
+import cesar.montaldi.lojavirtual.repository.ImagemProdutoRepository;
 import cesar.montaldi.lojavirtual.repository.VendaCompraLojaVirtualRepository;
 
 @Service
@@ -20,6 +21,7 @@ public class VendaService {
 	
 	@Autowired
 	private VendaCompraLojaVirtualRepository vendaCompraLojaVirtualRepository;
+
 	
 	public void exclusaoVendaLogica(Long idVenda) {
 		String sql = "begin; update venda_compra_loja_virtual set excluido = true where id = "+ idVenda +"; commit;";
@@ -56,6 +58,6 @@ public class VendaService {
 		
 		return vendaCompraLojaVirtualRepository.consultaVendaFaixaData(date1, date2);
 	}
-	
+
 }
 

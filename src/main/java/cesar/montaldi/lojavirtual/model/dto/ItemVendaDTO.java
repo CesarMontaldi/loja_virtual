@@ -5,10 +5,10 @@ public class ItemVendaDTO {
 	private Long id;
 	
 	private ProdutoDTO produto;
-	
+
 	private Double quantidade;
 	
-	
+
 	public Long getId() {
 		return id;
 	}

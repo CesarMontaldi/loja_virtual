@@ -41,6 +41,10 @@ public class ProdutoDTO {
 	private CategoriaProduto categoriaProduto;
 	
 	private MarcaProduto marcaProduto;
+	
+	private String categoriaDoProduto;
+	
+	private String marcaDoProduto;
 
 	private List<ImagemProdutoDTO> imagens = new ArrayList<ImagemProdutoDTO>();
 	
@@ -144,6 +148,22 @@ public class ProdutoDTO {
 
 	public MarcaProduto getMarcaProduto() {
 		return marcaProduto;
+	}
+	
+	public void setCategoriaDoProduto(String categoriaDoProduto) {
+		this.categoriaDoProduto = categoriaDoProduto;
+	}
+	
+	public String getCategoriaDoProduto() {
+		return categoriaDoProduto;
+	}
+	
+	public void setMarcaDoProduto(String marcaDoProduto) {
+		this.marcaDoProduto = marcaDoProduto;
+	}
+	
+	public String getMarcaDoProduto() {
+		return marcaDoProduto;
 	}
 
 	public void setMarcaProduto(MarcaProduto marcaProduto) {
