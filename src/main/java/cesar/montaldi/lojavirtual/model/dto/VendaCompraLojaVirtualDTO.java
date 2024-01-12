@@ -6,6 +6,7 @@ import java.util.List;
 
 import cesar.montaldi.lojavirtual.model.Endereco;
 import cesar.montaldi.lojavirtual.model.FormaPagamento;
+import cesar.montaldi.lojavirtual.model.NotaFiscalVenda;
 import cesar.montaldi.lojavirtual.model.Pessoa;
 
 public class VendaCompraLojaVirtualDTO {
@@ -28,7 +29,7 @@ public class VendaCompraLojaVirtualDTO {
 	
 	private List<ItemVendaDTO> itemVendaLoja = new ArrayList<ItemVendaDTO>();
 	
-	
+
 	public void setId(Long id) {
 		this.id = id;
 	}

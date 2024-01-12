@@ -27,6 +27,7 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -41,15 +42,18 @@ public class VendaCompraLojaVirtual implements Serializable{
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_venda_compra_loja_virtual")
 	private Long id;
 	
-	@NotNull(message = "A pessoa conpradora deve ser informada")
+	 
+	@NotNull(message = "A pessoa compradora deve ser informada")
 	@ManyToOne(targetEntity = PessoaFisica.class, cascade = CascadeType.ALL)
 	@JoinColumn(name = "pessoa_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "pessoa_fk"))
 	private PessoaFisica pessoa;
+	
 	
 	@NotNull(message = "O endereço de entrega deve ser informado")
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "endereco_entrega_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "endereco_entrega_fk"))
 	private Endereco enderecoEntrega;
+	
 	
 	@NotNull(message = "O endereço de cobrança deve ser informado")
 	@ManyToOne(cascade = CascadeType.ALL)
@@ -67,7 +71,7 @@ public class VendaCompraLojaVirtual implements Serializable{
 	@JoinColumn(name = "forma_pagamento_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "forma_pagamento_fk"))
 	private FormaPagamento formaPagamento;
 	
-	@JsonIgnoreProperties(allowGetters = true)
+	//@JsonIgnoreProperties(allowGetters = true)
 	@NotNull(message = "A nota fiscal deve ser informada")
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "nota_fiscal_venda_id", nullable = true, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "nota_fiscal_venda_fk"))

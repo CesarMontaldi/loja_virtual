@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import cesar.montaldi.lojavirtual.ExceptionLojaVirtual;
 import cesar.montaldi.lojavirtual.model.NotaFiscalCompra;
+import cesar.montaldi.lojavirtual.model.NotaFiscalVenda;
 import cesar.montaldi.lojavirtual.repository.NotaFiscalCompraRepository;
+import cesar.montaldi.lojavirtual.repository.NotaFiscalVendaRepository;
 
 @RestController
 public class NotaFiscalCompraController {
@@ -25,7 +27,7 @@ public class NotaFiscalCompraController {
 	@Autowired
 	private NotaFiscalCompraRepository notaFiscalCompraRepository;
 	
-	
+
 	@ResponseBody 
 	@PostMapping(value = "/salvarNotaFiscalCompra")
 	public ResponseEntity<NotaFiscalCompra> salvarNotaFiscalCompra(@RequestBody @Valid NotaFiscalCompra notaFiscalCompra) throws ExceptionLojaVirtual {
@@ -89,7 +91,7 @@ public class NotaFiscalCompraController {
 		return new ResponseEntity<NotaFiscalCompra>(notaFiscalCompra, HttpStatus.OK);
 	}
 	
-	
+
 	@ResponseBody 
 	@GetMapping(value = "/buscarNotaFiscalCompraDescricao/{desc}")
 	public ResponseEntity<List<NotaFiscalCompra>> buscarNotaPorDescricao(@PathVariable("desc") String desc) throws ExceptionLojaVirtual {
